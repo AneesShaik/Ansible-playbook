@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: name=httpd state=latest
+  - name: ensure that apache is started
+    service: name=httpd state=running
+
+- hosts: localhost
+  remote_user: root
+
+  tasks:
+  - name: ensure php is at the latest version
+    yum: name={{ item }} state=present
+    with_items:
+      - php
+      - php-fpm
+      - php-enchant
+      - php-IDNA_Convert
+      - php-mbstring
+      - php-mysql
+      - php-PHPMailer
+      - php-process
+      - php-simplepie
+      - php-xml
