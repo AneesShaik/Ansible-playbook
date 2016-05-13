@@ -6,7 +6,7 @@
   - name: ensure apache is at the latest version
     yum: name=httpd state=latest
   - name: ensure that apache is started
-    service: name=httpd state=running
+    service: name=httpd state=running enabled=yes
 
 - hosts: localhost
   remote_user: root
@@ -25,3 +25,4 @@
       - php-process
       - php-simplepie
       - php-xml
+      - php-gd
