@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   remote_user: root
+  sudo: yes
 
   tasks:
   - name: ensure apache is at the latest version
@@ -10,6 +11,7 @@
 
 - hosts: localhost
   remote_user: root
+  sudo: yes
 
   tasks:
   - name: ensure php is at the latest version
@@ -26,3 +28,44 @@
       - php-simplepie
       - php-xml
       - php-gd
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: Change the Permission of html directory
+    shell: /usr/bin/chmod -R 777 /var/www/html/
+
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Download wordpress tar file
+    shell: /usr/bin/wget https://wordpress.org/latest.tar.gz
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Unzip Wordpress tar file
+    shell: /usr/bin/tar -xzf latest.tar.gz
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Change owner of Wordpress file
+    shell: /usr/bin/chown ec2-user:ec2-user wordpress -R
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Moving the wordpress files into HTML directory
+    shell: /usr/bin/mv wordpress/ /var/www/html/
