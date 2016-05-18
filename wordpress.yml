@@ -28,6 +28,7 @@
       - php-simplepie
       - php-xml
       - php-gd
+      - mariadb
 
 - hosts: localhost
   remote_user: root
