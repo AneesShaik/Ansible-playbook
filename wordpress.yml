@@ -1,0 +1,84 @@
+---
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: name=httpd state=latest
+  - name: ensure that apache is started
+    service: name=httpd state=running enabled=yes
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: ensure php is at the latest version
+    yum: name={{ item }} state=present
+    with_items:
+      - php
+      - php-fpm
+      - php-enchant
+      - php-IDNA_Convert
+      - php-mbstring
+      - php-mysql
+      - php-PHPMailer
+      - php-process
+      - php-simplepie
+      - php-xml
+      - php-gd
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: Change the Permission of html directory
+    shell: /usr/bin/chmod -R 777 /var/www/html/
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Download wordpress tar file
+    shell: wget https://wordpress.org/latest.tar.gz
+    args:
+      chdir: /var/www/html/
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Unzip Wordpress tar file
+    shell: tar -xzf latest.tar.gz
+    args:
+      chdir: /var/www/html/
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Rename PHP file
+    shell: mv wp-config-sample.php wp-config.php
+    args:
+      chdir: /var/www/html/wordpress/
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: Change owner of Wordpress file
+    shell: /usr/bin/chown ec2-user:ec2-user /var/www/html -R
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: ensure that apache is restarted
+    service: name=httpd state=restarted

@@ -1,0 +1,85 @@
+---
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: ensure Apache is at the latest version
+    yum: name=httpd state=latest
+  - name: ensure that apache is started
+    service: name=httpd state=running enabled=yes
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: ensure PHP is at the latest version
+    yum: name={{ item }} state=present
+    with_items:
+      - php
+      - php-fpm
+      - php-enchant
+      - php-IDNA_Convert
+      - php-mbstring
+      - php-mysql
+      - php-PHPMailer
+      - php-process
+      - php-simplepie
+      - php-xml
+      - php-gd
+      - mariadb
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: Change the Permission of html directory
+    shell: /usr/bin/chmod -R 777 /var/www/html/
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Download Drupal tar file
+    shell: wget http://ftp.drupal.org/files/projects/drupal-7.0.tar.gz
+    args:
+      chdir: /var/www/html/
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Unzip Drupal tar file
+    shell: tar xvf drupal-7.0.tar.gz
+    args:
+      chdir: /var/www/html/
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Rename Drupal tar file
+    shell: mv drupal-7.0/ drupal
+    args:
+      chdir: /var/www/html/
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: Change owner of Drupal file
+    shell: /usr/bin/chown ec2-user:ec2-user /var/www/html -R
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: ensure that apache is restarted
+    service: name=httpd state=restarted
