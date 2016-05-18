@@ -37,7 +37,6 @@
   - name: Change the Permission of html directory
     shell: /usr/bin/chmod -R 777 /var/www/html/
 
-
 - hosts: localhost
   remote_user: ec2-user
   sudo: yes
@@ -59,13 +58,21 @@
   sudo: yes
 
   tasks:
-  - name: Change owner of Wordpress file
-    shell: /usr/bin/chown ec2-user:ec2-user wordpress -R
+  - name: Moving the wordpress files into HTML directory
+    shell: /usr/bin/mv wordpress/ /var/www/html/
 
 - hosts: localhost
-  remote_user: ec2-user
+  remote_user: root
   sudo: yes
 
   tasks:
-  - name: Moving the wordpress files into HTML directory
-    shell: /usr/bin/mv wordpress/ /var/www/html/
+  - name: Change owner of Wordpress file
+    shell: /usr/bin/chown ec2-user:ec2-user /var/www/html -R
+
+- hosts: localhost
+  remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: ensure that apache is restarted
+    service: name=httpd state=restarted
