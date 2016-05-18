@@ -43,7 +43,9 @@
 
   tasks:
   - name: Download wordpress tar file
-    shell: /usr/bin/wget https://wordpress.org/latest.tar.gz
+    shell: wget https://wordpress.org/latest.tar.gz
+    args:
+      chdir: /var/www/html/
 
 - hosts: localhost
   remote_user: ec2-user
@@ -51,15 +53,19 @@
 
   tasks:
   - name: Unzip Wordpress tar file
-    shell: /usr/bin/tar -xzf latest.tar.gz
+    shell: tar -xzf latest.tar.gz
+    args:
+      chdir: /var/www/html/
 
 - hosts: localhost
   remote_user: ec2-user
   sudo: yes
 
   tasks:
-  - name: Moving the wordpress files into HTML directory
-    shell: /usr/bin/mv wordpress/ /var/www/html/
+  - name: Rename PHP file
+    shell: mv wp-config-sample.php wp-config.php
+    args:
+      chdir: /var/www/html/wordpress/
 
 - hosts: localhost
   remote_user: root
