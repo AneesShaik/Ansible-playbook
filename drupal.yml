@@ -69,6 +69,26 @@
       chdir: /var/www/html/
 
 - hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Rename Site file
+    shell: mv example.sites.php sites.php
+    args:
+      chdir: /var/www/html/drupal/sites/
+
+- hosts: localhost
+  remote_user: ec2-user
+  sudo: yes
+
+  tasks:
+  - name: Rename Default file
+    shell: mv default.settings.php settings.php
+    args:
+      chdir: /var/www/html/drupal/sites/default/
+
+- hosts: localhost
   remote_user: root
   sudo: yes
 
