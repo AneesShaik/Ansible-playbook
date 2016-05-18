@@ -84,7 +84,7 @@
 
   tasks:
   - name: Rename Default file
-    shell: mv default.settings.php settings.php
+    shell: touch settings.php
     args:
       chdir: /var/www/html/drupal/sites/default/
 
