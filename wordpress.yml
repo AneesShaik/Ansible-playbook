@@ -36,7 +36,7 @@
 
   tasks:
   - name: Change the Permission of html directory
-    shell: /usr/bin/chmod -R 777 /var/www/html/
+    shell: /usr/bin/chmod -R 777 /var/www/
 
 - hosts: localhost
   remote_user: ec2-user
